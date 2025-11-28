@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration - Librairie Online</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        .logo span {
+            color: #3498db;
+        }
+        
+        .admin-login {
+            background-color: white;
+            padding: 3rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 400px;
+            margin: 5rem auto;
+            text-align: center;
+        }
+        
+        .admin-login h2 {
+            margin-bottom: 2rem;
+            color: #2c3e50;
+        }
+        
+        .admin-login-form {
+            text-align: left;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .login-btn:hover {
+            background-color: #1a252f;
+        }
+        
+        .admin-panel {
+            display: none;
+            padding: 2rem 0;
+        }
+        
+        .admin-panel.active {
+            display: block;
+        }
+        
+        .logout-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 2rem;
+            transition: background-color 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            color: #2c3e50;
+        }
+        
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .admin-table th, .admin-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .admin-table th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .admin-table tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .status-paid {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+        
+        .status-pending {
+            color: #e67e22;
+            font-weight: bold;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 1rem;
+        }
+        
+        .back-to-shop {
+            display: inline-block;
+            margin-top: 1rem;
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        .back-to-shop:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .admin-table {
+                font-size: 0.8rem;
+            }
+            
+            .admin-table th, .admin-table td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- En-tête -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Librairie<span>Online</span> <small>Admin</small></div>
+                <a href="index.html" class="back-to-shop" style="color: white;">← Retour à la boutique</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Formulaire de connexion admin -->
+    <div class="container">
+        <div class="admin-login" id="adminLogin">
+            <h2>Connexion Administrateur</h2>
+            <div class="admin-login-form">
+                <div class="form-group">
+                    <label for="adminUsername">Nom d'utilisateur</label>
+                    <input type="text" id="adminUsername" placeholder="Entrez votre nom d'utilisateur">
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword">Mot de passe</label>
+                    <input type="password" id="adminPassword" placeholder="Entrez votre mot de passe">
+                </div>
+                <button class="login-btn" id="adminLoginBtn">Se connecter</button>
+            </div>
+        </div>
+
+        <!-- Panel admin (caché par défaut) -->
+        <div class="admin-panel" id="adminPanel">
+            <button class="logout-btn" id="logoutBtn">Déconnexion</button>
+            <h2 class="section-title">Tableau de Bord Administrateur</h2>
+            
+            <!-- Statistiques -->
+            <div class="stats-container" id="statsContainer">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalOrders">0</div>
+                    <div class="stat-label">Commandes Total</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalRevenue">0 HTG</div>
+                    <div class="stat-label">Chiffre d'Affaires</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="avgOrder">0 HTG</div>
+                    <div class="stat-label">Panier Moyen</div>
+                </div>
+            </div>
+
+            <!-- Historique des paiements -->
+            <div class="admin-panel-content">
+                <h3 style="margin-bottom: 1rem;">Historique des Paiements</h3>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID Commande</th>
+                            <th>Client</th>
+                            <th>Email</th>
+                            <th>Téléphone</th>
+                            <th>Montant</th>
+                            <th>Date</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="paymentsTable">
+                        <!-- Les paiements seront ajoutés dynamiquement ici -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration d'administration
+        const ADMIN_CREDENTIALS = {
+            username: "admin",
+            password: "admin123" // À changer en production !
+        };
+
+        // Éléments DOM
+        const adminLogin = document.getElementById('adminLogin');
+        const adminPanel = document.getElementById('adminPanel');
+        const adminLoginBtn = document.getElementById('adminLoginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const paymentsTable = document.getElementById('paymentsTable');
+        const totalOrders = document.getElementById('totalOrders');
+        const totalRevenue = document.getElementById('totalRevenue');
+        const avgOrder = document.getElementById('avgOrder');
+
+        // État d'authentification
+        let isAdminAuthenticated = false;
+
+        // Fonction d'authentification
+        function authenticateAdmin() {
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+            
+            if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+                isAdminAuthenticated = true;
+                updateAdminUI();
+            } else {
+                alert('Identifiants incorrects');
+            }
+        }
+
+        // Fonction de déconnexion
+        function logoutAdmin() {
+            isAdminAuthenticated = false;
+            updateAdminUI();
+            document.getElementById('adminUsername').value = '';
+            document.getElementById('adminPassword').value = '';
+        }
+
+        // Mettre à jour l'interface admin
+        function updateAdminUI() {
+            if (isAdminAuthenticated) {
+                adminLogin.style.display = 'none';
+                adminPanel.classList.add('active');
+                loadOrdersData();
+            } else {
+                adminLogin.style.display = 'block';
+                adminPanel.classList.remove('active');
+            }
+        }
+
+        // Charger les données des commandes
+        function loadOrdersData() {
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            displayPayments(orders);
+            updateStats(orders);
+        }
+
+        // Afficher les paiements dans le tableau
+        function displayPayments(orders) {
+            paymentsTable.innerHTML = '';
+            
+            if (orders.length === 0) {
+                paymentsTable.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 2rem;">Aucun paiement enregistré</td></tr>';
+                return;
+            }
+            
+            // Trier par date (plus récent en premier)
+            orders.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            orders.forEach(order => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>CMD-${order.id}</td>
+                    <td>${order.user.name}</td>
+                    <td>${order.user.email}</td>
+                    <td>${order.user.phone}</td>
+                    <td>${order.total} HTG</td>
+                    <td>${new Date(order.date).toLocaleDateString('fr-FR')} ${new Date(order.date).toLocaleTimeString('fr-FR')}</td>
+                    <td class="status-${order.status}">${order.status === 'paid' ? 'Payé' : 'En attente'}</td>
+                    <td>
+                        <button class="btn" onclick="viewOrderDetails(${order.id})">Détails</button>
+                    </td>
+                `;
+                paymentsTable.appendChild(row);
+            });
+        }
+
+        // Mettre à jour les statistiques
+        function updateStats(orders) {
+            const total = orders.length;
+            const revenue = orders.reduce((sum, order) => sum + order.total, 0);
+            const average = total > 0 ? revenue / total : 0;
+            
+            totalOrders.textContent = total;
+            totalRevenue.textContent = `${revenue} HTG`;
+            avgOrder.textContent = `${Math.round(average)} HTG`;
+        }
+
+        // Voir les détails d'une commande
+        function viewOrderDetails(orderId) {
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            const order = orders.find(o => o.id === orderId);
+            
+            if (order) {
+                alert(`Détails de la commande CMD-${order.id}:
+                
+CLIENT:
+Nom: ${order.user.name}
+Email: ${order.user.email}
+Téléphone: ${order.user.phone}
+Adresse: ${order.user.address || 'Non spécifiée'}
+
+COMMANDE:
+Montant: ${order.total} HTG
+Date: ${new Date(order.date).toLocaleString('fr-FR')}
+Statut: ${order.status === 'paid' ? 'Payé' : 'En attente'}
+Méthode de paiement: ${order.paymentMethod}
+
+LIVRES COMMANDÉS:
+${order.items.map(item => `- ${item.title} (x${item.quantity}) - ${item.price * item.quantity} HTG`).join('\n')}
+                `);
+            }
+        }
+
+        // Initialiser les écouteurs d'événements
+        function initEventListeners() {
+            adminLoginBtn.addEventListener('click', authenticateAdmin);
+            logoutBtn.addEventListener('click', logoutAdmin);
+            
+            // Permettre la connexion avec Entrée
+            document.getElementById('adminPassword').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    authenticateAdmin();
+                }
+            });
+        }
+
+        // Initialiser l'application
+        function init() {
+            initEventListeners();
+            updateAdminUI(); // Masquer l'admin par défaut
+        }
+
+        // Démarrer l'application
+        init();
+    </script>
+</body>
+</html>

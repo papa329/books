@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="ht">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookStoreHT | Boutik Ebooks Kreyòl</title>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .logo span {
+            color: var(--warning);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 20px;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: var(--primary);
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .cart-icon {
+            position: relative;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--warning);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .auth-buttons button {
+            background: none;
+            border: none;
+            padding: 8px 15px;
+            margin-left: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        
+        .login-btn {
+            color: var(--primary);
+        }
+        
+        .signup-btn {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: white;
+            color: var(--primary);
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        /* Featured Section */
+        .section-title {
+            text-align: center;
+            margin: 60px 0 30px;
+            font-size: 32px;
+            color: var(--dark);
+        }
+        
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .book-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .book-image {
+            height: 200px;
+            background-color: var(--light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+        }
+        
+        .book-info {
+            padding: 20px;
+        }
+        
+        .book-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .book-author {
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+        
+        .book-price {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .book-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .add-to-cart {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+        
+        .view-details {
+            background-color: var(--light-gray);
+            color: var(--dark);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        /* Categories Section */
+        .categories {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 60px;
+        }
+        
+        .category {
+            background-color: white;
+            padding: 15px 25px;
+            border-radius: 30px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .category:hover, .category.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 60px 0 30px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -8px;
+            width: 40px;
+            height: 3px;
+            background-color: var(--primary);
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column ul li a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #495057;
+            color: #adb5bd;
+            font-size: 14px;
+        }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+        
+        .modal {
+            background-color: white;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        /* Cart Styles */
+        .cart-item {
+            display: flex;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .cart-item-image {
+            width: 80px;
+            height: 100px;
+            background-color: var(--light-gray);
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+        }
+        
+        .cart-item-details {
+            flex-grow: 1;
+        }
+        
+        .cart-item-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .cart-item-price {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+        
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            background-color: var(--light-gray);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .quantity {
+            margin: 0 10px;
+        }
+        
+        .remove-item {
+            background: none;
+            border: none;
+            color: var(--warning);
+            cursor: pointer;
+        }
+        
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 0;
+            border-top: 1px solid var(--light-gray);
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .checkout-btn {
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        /* Payment QR Code */
+        .payment-methods {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .payment-method {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        
+        .payment-method.active {
+            border-color: var(--primary);
+        }
+        
+        .payment-method-logo {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .qr-code-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            background-color: var(--light-gray);
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+        }
+        
+        .transaction-form {
+            margin-top: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-wrap: wrap;
+            }
+            
+            nav {
+                width: 100%;
+                order: 3;
+                margin-top: 15px;
+                display: none;
+            }
+            
+            nav.active {
+                display: block;
+            }
+            
+            nav ul {
+                flex-direction: column;
+            }
+            
+            nav ul li {
+                margin: 10px 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+            }
+            
+            .payment-methods {
+                flex-direction: column;
+            }
+            
+            .payment-method {
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // Sample data for books
+        const booksData = [
+            {
+                id: 1,
+                title: "Krik Krak",
+                author: "Edwidge Danticat",
+                price: 9.99,
+                category: "Literati",
+                description: "Yon koleksyon istwa kout ki eksplore lavi nan Ayiti ak diaspora Ayisyen an.",
+                rating: 4.5
+            },
+            {
+                id: 2,
+                title: "Dezafi",
+                author: "Frankétienne",
+                price: 12.99,
+                category: "Literati",
+                description: "Premye woman espiral ekri an kreyòl ayisyen.",
+                rating: 4.7
+            },
+            {
+                id: 3,
+                title: "Konesans Finansye",
+                author: "Jean Pierre",
+                price: 14.99,
+                category: "Edikasyon",
+                description: "Aprann kijan pou jere lajan ou ak fè envestisman entelijan.",
+                rating: 4.3
+            },
+            {
+                id: 4,
+                title: "Kuisin Kreyòl",
+                author: "Marie Claire",
+                price: 11.99,
+                category: "Kizin",
+                description: "Resèt tradisyonèl ayisyen pou pare manje déyè.",
+                rating: 4.8
+            },
+            {
+                id: 5,
+                title: "Gid Devlopman Pèsonèl",
+                author: "Marc Antoine",
+                price: 10.99,
+                category: "Devlopman Pèsonèl",
+                description: "Eksplore fason pou amelyore lavi ou ak reyalize objektif ou.",
+                rating: 4.4
+            },
+            {
+                id: 6,
+                title: "Istwa Ayiti",
+                author: "Georges Michel",
+                price: 13.99,
+                category: "Istwa",
+                description: "Yon gid konplè sou istwa rich peyi Ayiti.",
+                rating: 4.6
+            }
+        ];
+
+        // Main App Component
+        function App() {
+            const [currentView, setCurrentView] = React.useState('home');
+            const [cart, setCart] = React.useState([]);
+            const [modalOpen, setModalOpen] = React.useState(null);
+            const [selectedBook, setSelectedBook] = React.useState(null);
+            const [selectedCategory, setSelectedCategory] = React.useState('tout');
+            const [user, setUser] = React.useState(null);
+            const [paymentMethod, setPaymentMethod] = React.useState('moncash');
+            const [transactionId, setTransactionId] = React.useState('');
+            const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+
+            // Add book to cart
+            const addToCart = (book) => {
+                const existingItem = cart.find(item => item.id === book.id);
+                if (existingItem) {
+                    setCart(cart.map(item => 
+                        item.id === book.id ? {...item, quantity: item.quantity + 1} : item
+                    ));
+                } else {
+                    setCart([...cart, {...book, quantity: 1}]);
+                }
+                setModalOpen('cart');
+            };
+
+            // Remove item from cart
+            const removeFromCart = (id) => {
+                setCart(cart.filter(item => item.id !== id));
+            };
+
+            // Update quantity
+            const updateQuantity = (id, newQuantity) => {
+                if (newQuantity < 1) return;
+                setCart(cart.map(item => 
+                    item.id === id ? {...item, quantity: newQuantity} : item
+                ));
+            };
+
+            // Calculate total
+            const cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+
+            // Filter books by category
+            const filteredBooks = selectedCategory === 'tout' 
+                ? booksData 
+                : booksData.filter(book => book.category === selectedCategory);
+
+            // Handle payment
+            const handlePayment = () => {
+                if (!transactionId.trim()) {
+                    alert('Tanpri antre ID tranzaksyon an');
+                    return;
+                }
+                
+                // In a real app, this would verify with the payment provider
+                alert(`Peman an verifye! ID tranzaksyon: ${transactionId}`);
+                setModalOpen('download');
+                setCart([]);
+            };
+
+            // Handle login
+            const handleLogin = () => {
+                // In a real app, this would connect to backend
+                setUser({ name: "Itilizatè Egzanp", email: "itilizate@egzanp.com" });
+                setModalOpen(null);
+            };
+
+            return (
+                <div>
+                    {/* Header */}
+                    <header>
+                        <div className="container header-container">
+                            <a href="#" className="logo" onClick={(e) => { e.preventDefault(); setCurrentView('home'); }}>Book<span>Store</span>HT</a>
+                            
+                            <button className="mobile-menu-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+                                ☰
+                            </button>
+                            
+                            <nav className={mobileMenuOpen ? 'active' : ''}>
+                                <ul>
+                                    <li><a href="#" onClick={(e) => { e.preventDefault(); setCurrentView('home'); setMobileMenuOpen(false); }}>Akèy</a></li>
+                                    <li><a href="#" onClick={(e) => { e.preventDefault(); setCurrentView('shop'); setMobileMenuOpen(false); }}>Boutik</a></li>
+                                    <li><a href="#" onClick={(e) => { e.preventDefault(); setCurrentView('about'); setMobileMenuOpen(false); }}>Sou nou</a></li>
+                                    <li><a href="#" onClick={(e) => { e.preventDefault(); setCurrentView('contact'); setMobileMenuOpen(false); }}>Kontak</a></li>
+                                </ul>
+                            </nav>
+                            
+                            <div className="header-actions">
+                                <div className="cart-icon" onClick={() => setModalOpen('cart')}>
+                                    🛒
+                                    {cart.length > 0 && <span className="cart-count">{cart.length}</span>}
+                                </div>
+                                
+                                <div className="auth-buttons">
+                                    {user ? (
+                                        <span>Byenveni, {user.name}</span>
+                                    ) : (
+                                        <>
+                                            <button className="login-btn" onClick={() => setModalOpen('login')}>Konekte</button>
+                                            <button className="signup-btn" onClick={() => setModalOpen('signup')}>Enskri</button>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+
+                    {/* Main Content */}
+                    <main>
+                        {currentView === 'home' && (
+                            <>
+                                {/* Hero Section */}
+                                <section className="hero">
+                                    <div className="container">
+                                        <h1>Jwenn Ebooks Kreyòl Ou Yo Isit</h1>
+                                        <p>Plis pase 100 ebook nan divès kategori: literati, edikasyon, devlopman pèsonèl, ak plis ankò.</p>
+                                        <a href="#" className="cta-button" onClick={(e) => { e.preventDefault(); setCurrentView('shop'); }}>Eksplore Boutik la</a>
+                                    </div>
+                                </section>
+
+                                {/* Featured Books */}
+                                <section className="container">
+                                    <h2 className="section-title">Ebooks Popilè</h2>
+                                    <div className="books-grid">
+                                        {booksData.slice(0, 4).map(book => (
+                                            <div key={book.id} className="book-card">
+                                                <div className="book-image">📚</div>
+                                                <div className="book-info">
+                                                    <h3 className="book-title">{book.title}</h3>
+                                                    <p className="book-author">{book.author}</p>
+                                                    <p className="book-price">${book.price}</p>
+                                                    <div className="book-actions">
+                                                        <button className="add-to-cart" onClick={() => addToCart(book)}>Ajoute nan Panier</button>
+                                                        <button className="view-details" onClick={() => { setSelectedBook(book); setModalOpen('book-details'); }}>Detay</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </section>
+
+                                {/* Categories */}
+                                <section className="container">
+                                    <h2 className="section-title">Kategori</h2>
+                                    <div className="categories">
+                                        <div className={`category ${selectedCategory === 'tout' ? 'active' : ''}`} onClick={() => setSelectedCategory('tout')}>Tout</div>
+                                        <div className={`category ${selectedCategory === 'Literati' ? 'active' : ''}`} onClick={() => setSelectedCategory('Literati')}>Literati</div>
+                                        <div className={`category ${selectedCategory === 'Edikasyon' ? 'active' : ''}`} onClick={() => setSelectedCategory('Edikasyon')}>Edikasyon</div>
+                                        <div className={`category ${selectedCategory === 'Kizin' ? 'active' : ''}`} onClick={() => setSelectedCategory('Kizin')}>Kizin</div>
+                                        <div className={`category ${selectedCategory === 'Devlopman Pèsonèl' ? 'active' : ''}`} onClick={() => setSelectedCategory('Devlopman Pèsonèl')}>Devlopman Pèsonèl</div>
+                                        <div className={`category ${selectedCategory === 'Istwa' ? 'active' : ''}`} onClick={() => setSelectedCategory('Istwa')}>Istwa</div>
+                                    </div>
+                                </section>
+                            </>
+                        )}
+
+                        {currentView === 'shop' && (
+                            <section className="container">
+                                <h2 className="section-title">Tout Ebooks Nou Yo</h2>
+                                <div className="categories">
+                                    <div className={`category ${selectedCategory === 'tout' ? 'active' : ''}`} onClick={() => setSelectedCategory('tout')}>Tout</div>
+                                    <div className={`category ${selectedCategory === 'Literati' ? 'active' : ''}`} onClick={() => setSelectedCategory('Literati')}>Literati</div>
+                                    <div className={`category ${selectedCategory === 'Edikasyon' ? 'active' : ''}`} onClick={() => setSelectedCategory('Edikasyon')}>Edikasyon</div>
+                                    <div className={`category ${selectedCategory === 'Kizin' ? 'active' : ''}`} onClick={() => setSelectedCategory('Kizin')}>Kizin</div>
+                                    <div className={`category ${selectedCategory === 'Devlopman Pèsonèl' ? 'active' : ''}`} onClick={() => setSelectedCategory('Devlopman Pèsonèl')}>Devlopman Pèsonèl</div>
+                                    <div className={`category ${selectedCategory === 'Istwa' ? 'active' : ''}`} onClick={() => setSelectedCategory('Istwa')}>Istwa</div>
+                                </div>
+                                <div className="books-grid">
+                                    {filteredBooks.map(book => (
+                                        <div key={book.id} className="book-card">
+                                            <div className="book-image">📚</div>
+                                            <div className="book-info">
+                                                <h3 className="book-title">{book.title}</h3>
+                                                <p className="book-author">{book.author}</p>
+                                                <p className="book-price">${book.price}</p>
+                                                <div className="book-actions">
+                                                    <button className="add-to-cart" onClick={() => addToCart(book)}>Ajoute nan Panier</button>
+                                                    <button className="view-details" onClick={() => { setSelectedBook(book); setModalOpen('book-details'); }}>Detay</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+                        )}
+
+                        {currentView === 'about' && (
+                            <section className="container" style={{padding: '60px 0'}}>
+                                <h2 className="section-title">Sou Nou</h2>
+                                <div style={{maxWidth: '800px', margin: '0 auto', textAlign: 'center'}}>
+                                    <p style={{fontSize: '18px', marginBottom: '30px'}}>
+                                        BookStoreHT se yon platfòm e-commerce ki dedye a vann ebooks an kreyòl ayisyen. 
+                                        Nou vize pou pibliye ak distribye liv dijital ki ka ede kominote ayisyen an toupatou nan lemonn.
+                                    </p>
+                                    <p style={{fontSize: '18px', marginBottom: '30px'}}>
+                                        Misyon nou se pou bay otè ayisyen yon platfòm pou yo pataje konesans ak istwa yo, 
+                                        epi bay lektè aksè fasil ak abòdab a kontni kalite nan lang matènèl yo.
+                                    </p>
+                                </div>
+                            </section>
+                        )}
+
+                        {currentView === 'contact' && (
+                            <section className="container" style={{padding: '60px 0'}}>
+                                <h2 className="section-title">Kontakte Nou</h2>
+                                <div style={{maxWidth: '600px', margin: '0 auto'}}>
+                                    <form style={{background: 'white', padding: '30px', borderRadius: '10px', boxShadow: '0 5px 15px rgba(0,0,0,0.1)'}}>
+                                        <div className="form-group">
+                                            <label className="form-label" htmlFor="name">Non ou</label>
+                                            <input className="form-input" type="text" id="name" placeholder="Antre non ou" />
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-label" htmlFor="email">Imèl</label>
+                                            <input className="form-input" type="email" id="email" placeholder="Antre adrès imèl ou" />
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-label" htmlFor="message">Mesaj</label>
+                                            <textarea className="form-input" id="message" rows="5" placeholder="Kisa ou ta renmen di nou?"></textarea>
+                                        </div>
+                                        <button type="submit" className="submit-btn">Voye Mesaj</button>
+                                    </form>
+                                </div>
+                            </section>
+                        )}
+                    </main>
+
+                    {/* Footer */}
+                    <footer>
+                        <div className="container">
+                            <div className="footer-content">
+                                <div className="footer-column">
+                                    <h3>BookStoreHT</h3>
+                                    <p style={{color: '#adb5bd', marginBottom: '20px'}}>Platfòm e-commerce pou vann ebooks an kreyòl ayisyen.</p>
+                                </div>
+                                <div className="footer-column">
+                                    <h3>Kategori</h3>
+                                    <ul>
+                                        <li><a href="#">Literati</a></li>
+                                        <li><a href="#">Edikasyon</a></li>
+                                        <li><a href="#">Kizin</a></li>
+                                        <li><a href="#">Devlopman Pèsonèl</a></li>
+                                        <li><a href="#">Istwa</a></li>
+                                    </ul>
+                                </div>
+                                <div className="footer-column">
+                                    <h3>Lyen Itil</h3>
+                                    <ul>
+                                        <li><a href="#">Akèy</a></li>
+                                        <li><a href="#">Boutik</a></li>
+                                        <li><a href="#">Sou nou</a></li>
+                                        <li><a href="#">Kontak</a></li>
+                                        <li><a href="#">FAQ</a></li>
+                                    </ul>
+                                </div>
+                                <div className="footer-column">
+                                    <h3>Kontak</h3>
+                                    <ul>
+                                        <li>📧 info@bookstoreht.com</li>
+                                        <li>📞 +509 1234 5678</li>
+                                        <li>📍 Pòtoprens, Ayiti</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div className="copyright">
+                                <p>&copy; 2023 BookStoreHT. Tout dwa rezève.</p>
+                            </div>
+                        </div>
+                    </footer>
+
+                    {/* Modals */}
+                    {modalOpen === 'cart' && (
+                        <div className="modal-overlay">
+                            <div className="modal">
+                                <div className="modal-header">
+                                    <h3 className="modal-title">Panier Ou</h3>
+                                    <button className="close-modal" onClick={() => setModalOpen(null)}>×</button>
+                                </div>
+                                <div className="modal-body">
+                                    {cart.length === 0 ? (
+                                        <p>Panier ou vid. Ajoute kèk ebooks!</p>
+                                    ) : (
+                                        <>
+                                            {cart.map(item => (
+                                                <div key={item.id} className="cart-item">
+                                                    <div className="cart-item-image">📚</div>
+                                                    <div className="cart-item-details">
+                                                        <h4 className="cart-item-title">{item.title}</h4>
+                                                        <p className="cart-item-price">${item.price}</p>
+                                                    </div>
+                                                    <div className="cart-item-actions">
+                                                        <div className="quantity-control">
+                                                            <button className="quantity-btn" onClick={() => updateQuantity(item.id, item.quantity - 1)}>-</button>
+                                                            <span className="quantity">{item.quantity}</span>
+                                                            <button className="quantity-btn" onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</button>
+                                                        </div>
+                                                        <button className="remove-item" onClick={() => removeFromCart(item.id)}>🗑️</button>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                            <div className="cart-total">
+                                                <span>Total:</span>
+                                                <span>${cartTotal.toFixed(2)}</span>
+                                            </div>
+                                            <button className="checkout-btn" onClick={() => setModalOpen('checkout')}>Kesye</button>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {modalOpen === 'book-details' && selectedBook && (
+                        <div className="modal-overlay">
+                            <div className="modal">
+                                <div className="modal-header">
+                                    <h3 className="modal-title">{selectedBook.title}</h3>
+                                    <button className="close-modal" onClick={() => setModalOpen(null)}>×</button>
+                                </div>
+                                <div className="modal-body">
+                                    <div style={{display: 'flex', marginBottom: '20px'}}>
+                                        <div style={{width: '120px', height: '160px', backgroundColor: '#e9ecef', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '20px'}}>📚</div>
+                                        <div>
+                                            <h4 style={{marginBottom: '10px'}}>{selectedBook.title}</h4>
+                                            <p style={{color: '#6c757d', marginBottom: '10px'}}>{selectedBook.author}</p>
+                                            <p style={{fontSize: '24px', fontWeight: '700', color: '#4361ee', marginBottom: '10px'}}>${selectedBook.price}</p>
+                                            <p>Rating: {selectedBook.rating} ⭐</p>
+                                        </div>
+                                    </div>
+                                    <p style={{marginBottom: '20px'}}>{selectedBook.description}</p>
+                                    <button className="add-to-cart" style={{width: '100%'}} onClick={() => { addToCart(selectedBook); setModalOpen('cart'); }}>Ajoute nan Panier</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {modalOpen === 'checkout' && (
+                        <div className="modal-overlay">
+                            <div className="modal">
+                                <div className="modal-header">
+                                    <h3 className="modal-title">Kesye</h3>
+                                    <button className="close-modal" onClick={() => setModalOpen(null)}>×</button>
+                                </div>
+                                <div className="modal-body">
+                                    <h4 style={{marginBottom: '15px'}}>Chwazi Metòd Peman</h4>
+                                    <div className="payment-methods">
+                                        <div className={`payment-method ${paymentMethod === 'moncash' ? 'active' : ''}`} onClick={() => setPaymentMethod('moncash')}>
+                                            <div className="payment-method-logo">📱</div>
+                                            <div>MonCash</div>
+                                        </div>
+                                        <div className={`payment-method ${paymentMethod === 'natcash' ? 'active' : ''}`} onClick={() => setPaymentMethod('natcash')}>
+                                            <div className="payment-method-logo">💳</div>
+                                            <div>NatCash</div>
+                                        </div>
+                                        <div className={`payment-method ${paymentMethod === 'kredinou' ? 'active' : ''}`} onClick={() => setPaymentMethod('kredinou')}>
+                                            <div className="payment-method-logo">💵</div>
+                                            <div>KrediNou</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="qr-code-container">
+                                        <h4 style={{marginBottom: '15px'}}>Eskane QR Code la pou peye</h4>
+                                        <div className="qr-code">
+                                            {paymentMethod === 'moncash' && 'QR MonCash'}
+                                            {paymentMethod === 'natcash' && 'QR NatCash'}
+                                            {paymentMethod === 'kredinou' && 'QR KrediNou'}
+                                        </div>
+                                        <p style={{marginTop: '10px', fontSize: '14px', color: '#6c757d'}}>Eskane QR code sa a ak aplikasyon {paymentMethod} ou a.</p>
+                                    </div>
+                                    
+                                    <div className="transaction-form">
+                                        <div className="form-group">
+                                            <label className="form-label" htmlFor="transaction-id">ID Tranzaksyon an</label>
+                                            <input 
+                                                className="form-input" 
+                                                type="text" 
+                                                id="transaction-id" 
+                                                placeholder="Antre ID tranzaksyon an" 
+                                                value={transactionId}
+                                                onChange={(e) => setTransactionId(e.target.value)}
+                                            />
+                                            <p style={{fontSize: '12px', color: '#6c757d', marginTop: '5px'}}>Antre ID tranzaksyon an ou jwenn nan aplikasyon peman an.</p>
+                                        </div>
+                                        <button className="submit-btn" onClick={handlePayment}>Verifye Peman</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {modalOpen === 'download' && (
+                        <div className="modal-overlay">
+                            <div className="modal">
+                                <div className="modal-header">
+                                    <h3 className="modal-title">Peman an Siksè!</h3>
+                                    <button className="close-modal" onClick={() => setModalOpen(null)}>×</button>
+                                </div>
+                                <div className="modal-body">
+                                    <div style={{textAlign: 'center', padding: '20px 0'}}>
+                                        <div style={{fontSize: '48px', marginBottom: '20px'}}>🎉</div>
+                                        <h4 style={{marginBottom: '15px'}}>Mèsi pou acha ou!</h4>
+                                        <p style={{marginBottom: '20px'}}>Ebooks ou yo pare pou telechaje. Klike sou bouton anba a pou telechaje yo.</p>
+                                        <button className="checkout-btn" onClick={() => { alert('Telechajman kòmanse!'); setModalOpen(null); }}>Telechaje Ebooks yo</button>
+                                        <p style={{fontSize: '12px', color: '#6c757d', marginTop: '10px'}}>Lyen sa a ap ekspiye nan 24 èdtan. Ou ka telechaje chak ebook 3 fwa.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {modalOpen === 'login' && (
+                        <div className="modal-overlay">
+                            <div className="modal">
+                                <div className="modal-header">
+                                    <h3 className="modal-title">Konekte</h3>
+                                    <button className="close-modal" onClick={() => setModalOpen(null)}>×</button>
+                                </div>
+                                <div className="modal-body">
+                                    <div className="form-group">
+                                        <label className="form-label" htmlFor="login-email">Imèl</label>
+                                        <input className="form-input" type="email" id="login-email" placeholder="Antre adrès imèl ou" />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label" htmlFor="login-password">Modpas</label>
+                                        <input className="form-input" type="password" id="login-password" placeholder="Antre modpas ou" />
+                                    </div>
+                                    <button className="submit-btn" onClick={handleLogin}>Konekte</button>
+                                    <p style={{textAlign: 'center', marginTop: '15px'}}>Pa gen kont? <a href="#" style={{color: '#4361ee'}} onClick={(e) => { e.preventDefault(); setModalOpen('signup'); }}>Kreye youn</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {modalOpen === 'signup' && (
+                        <div className="modal-overlay">
+                            <div className="modal">
+                                <div className="modal-header">
+                                    <h3 className="modal-title">Kreye Kont</h3>
+                                    <button className="close-modal" onClick={() => setModalOpen(null)}>×</button>
+                                </div>
+                                <div className="modal-body">
+                                    <div className="form-group">
+                                        <label className="form-label" htmlFor="signup-name">Non Konplè</label>
+                                        <input className="form-input" type="text" id="signup-name" placeholder="Antre non konplè ou" />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label" htmlFor="signup-email">Imèl</label>
+                                        <input className="form-input" type="email" id="signup-email" placeholder="Antre adrès imèl ou" />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label" htmlFor="signup-password">Modpas</label>
+                                        <input className="form-input" type="password" id="signup-password" placeholder="Kreye yon modpas" />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label" htmlFor="signup-confirm">Konfime Modpas</label>
+                                        <input className="form-input" type="password" id="signup-confirm" placeholder="Antre modpas la ankò" />
+                                    </div>
+                                    <button className="submit-btn" onClick={handleLogin}>Enskri</button>
+                                    <p style={{textAlign: 'center', marginTop: '15px'}}>Deja gen kont? <a href="#" style={{color: '#4361ee'}} onClick={(e) => { e.preventDefault(); setModalOpen('login'); }}>Konekte</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // Render the App
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
